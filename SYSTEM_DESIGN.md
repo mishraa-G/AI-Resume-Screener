@@ -1,7 +1,34 @@
 # System Design: AI Resume Shortlisting & Interview Assistant System
 
 ## 1. System Architecture
+
 The system follows a modular, monolithic service-oriented architecture using **Node.js** and **Express**, with strict boundary separation between routing, business logic, and external LLM interactions.
+
+```mermaid
+graph TD
+    UI[Frontend UI <br> Glassmorphism Dashboard] -->|multipart/form-data <br> POST /evaluate| API[Express Router]
+    
+    subgraph Backend Core
+        API -->|Buffer| PDF[pdf-parse]
+        PDF -->|Raw Text| Ex[Extractor Service]
+        API -->|JSON| Ex
+        API -->|Zod Validation| Model[Domain Models]
+        Ex -->|Strict Prompt| LLM_Ex[Groq API <br> Llama-3.3-70b]
+        LLM_Ex -->|ParsedResume JSON| Score[Scoring Engine]
+    end
+
+    subgraph Evaluation Metrics
+        Score --> M1[Exact Match]
+        Score --> M2[Achievement Metrics]
+        Score --> M3[Ownership Impact]
+        Score -->|Prompt| LLM_Sc[Groq API <br> Llama-3.3-70b]
+        LLM_Sc -->|Semantic Overlap| M4[Similarity Score]
+    end
+
+    M1 & M2 & M3 & M4 --> Agg[Tier Aggregation & Reasoning]
+    Agg -->|ScoreReport JSON| API
+    API -->|Render| UI
+```
 
 ### Component Interaction (Option A Focus)
 1. **Frontend UI (Static HTML/JS/CSS)**: Reads inputs from the user (Job Description parameters, Resume PDF/Text) and posts a serialized `multipart/form-data` payload.

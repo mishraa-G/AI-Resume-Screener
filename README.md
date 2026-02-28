@@ -11,6 +11,24 @@ An automated evaluation and scoring engine that takes a candidate's resume (Text
 - **Explainability API**: Returns a deeply detailed JSON log of the exact reasoning behind every individual score.
 - **Glassmorphic UI**: Beautiful front-end UX built directly into the server to interact easily with the AI.
 
+```mermaid
+sequenceDiagram
+    participant User
+    participant Router as Express API
+    participant Engine as Evaluation Engine
+    participant Groq as Groq Llama-3.3
+
+    User->>Router: Upload PDF & Job Description
+    Router->>Engine: Initiate /evaluate pipeline
+    Engine->>Groq: Prompt: Extract Candidate to JSON Schema
+    Groq-->>Engine: Structured Resume (Candidate, Skills, Experience)
+    Engine->>Engine: Calculate Exact/Achievement/Ownership (Regex/Math)
+    Engine->>Groq: Prompt: Compute Semantic Similarity Score
+    Groq-->>Engine: Score & Explainability JSON
+    Engine->>Router: Final Tier Classification & Reasonings
+    Router-->>User: Beautiful UI Dashboard Update
+```
+
 ## Architecture Documentation
 Please review the `SYSTEM_DESIGN.md` file in the root folder for a deep dive into the System Architecture, Data/AI Strategy, and Scalability approaches in alignment with the PRD.
 
