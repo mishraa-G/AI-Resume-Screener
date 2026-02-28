@@ -45,13 +45,19 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.disabled = true;
 
         try {
+            const formData = new FormData();
+            formData.append('job_description', JSON.stringify(jdJson));
+
+            const fileInput = document.getElementById('resume-file');
+            if (fileInput.files.length > 0) {
+                formData.append('resume_file', fileInput.files[0]);
+            } else {
+                formData.append('resume_text', resumeVal);
+            }
+
             const response = await fetch('/api/evaluate', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    job_description: jdJson,
-                    resume_text: resumeVal
-                })
+                body: formData
             });
 
             const data = await response.json();

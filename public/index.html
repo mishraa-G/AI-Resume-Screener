@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
   <!-- Animated Background -->
@@ -15,7 +17,7 @@
   <div class="bg-orb orb-3"></div>
 
   <div class="container">
-    
+
     <header>
       <h1>AI Resume Screener</h1>
       <p>Precision extraction & cognitive scoring powered by Groq.</p>
@@ -27,13 +29,17 @@
         <form id="eval-form">
           <div class="input-group">
             <label for="jd-text">Job Description (JSON / Text)</label>
-            <textarea id="jd-text" placeholder='{"title": "Software Engineer", "required_skills": ["Node.js", "TypeScript"]}' required></textarea>
+            <textarea id="jd-text"
+              placeholder='{"title": "Software Engineer", "required_skills": ["Node.js", "TypeScript"]}'
+              required></textarea>
           </div>
           <div class="input-group">
-            <label for="resume-text">Resume Text</label>
-            <textarea id="resume-text" placeholder="Paste the raw candidate resume text here..." required></textarea>
+            <label for="resume-text">Resume (PDF Upload or Paste Text)</label>
+            <input type="file" id="resume-file" accept="application/pdf"
+              style="margin-bottom: 10px; color: var(--text-muted);" />
+            <textarea id="resume-text" placeholder="Or paste the raw candidate resume text here..." required></textarea>
           </div>
-          
+
           <button type="submit" id="submit-btn">
             <span class="btn-text">Evaluate Candidate</span>
             <div class="spinner disable-view" id="loading-spinner"></div>
@@ -47,7 +53,7 @@
           <h2>Candidate Evaluation</h2>
           <button class="back-btn" id="back-btn">← New Eval</button>
         </div>
-        
+
         <div class="tier-badge" id="tier-badge">Tier A</div>
         <p class="candidate-name" id="candidate-name">Jane Doe</p>
 
@@ -86,4 +92,5 @@
 
   <script src="script.js"></script>
 </body>
+
 </html>

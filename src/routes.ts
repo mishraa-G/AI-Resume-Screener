@@ -2,16 +2,36 @@ import { Router, Request, Response } from 'express';
 import { JobDescriptionSchema } from './models';
 import { extractResume } from './services/extractor';
 import { scoreResume } from './services/scorer';
+import multer from 'multer';
+import pdfParse = require('pdf-parse');
 
+const upload = multer();
 const router = Router();
 
-router.post('/evaluate', async (req: Request, res: Response) => {
+router.post('/evaluate', upload.single('resume_file'), async (req: Request, res: Response) => {
     try {
         const { resume_text, job_description } = req.body;
 
+        let finalResumeText = resume_text;
+
+        // If a file was uploaded, parse the PDF instead
+        const uploadedFile = (req as any).file;
+        if (uploadedFile) {
+            if (uploadedFile.mimetype !== 'application/pdf') {
+                return res.status(400).json({ error: "Uploaded file must be a PDF." });
+            }
+            try {
+                const pdfParser: any = pdfParse;
+                const pdfData = await pdfParser(uploadedFile.buffer);
+                finalResumeText = pdfData.text;
+            } catch (e) {
+                return res.status(400).json({ error: "Failed to parse the uploaded PDF file." });
+            }
+        }
+
         // 1. Validate Input
-        if (!resume_text || typeof resume_text !== 'string') {
-            return res.status(400).json({ error: "Missing or invalid 'resume_text' in request body." });
+        if (!finalResumeText || typeof finalResumeText !== 'string' || finalResumeText.trim() === '') {
+            return res.status(400).json({ error: "Missing or invalid resume text. Please provide 'resume_text' or upload a 'resume_file'." });
         }
 
         if (!job_description) {
@@ -28,7 +48,7 @@ router.post('/evaluate', async (req: Request, res: Response) => {
         const jd = jdValidation.data;
 
         // 2. Extract structured resume from text
-        const parsedResume = await extractResume(resume_text);
+        const parsedResume = await extractResume(finalResumeText);
 
         // 3. Score the candidate against the Job Description
         const scoreReport = await scoreResume(parsedResume, jd);
