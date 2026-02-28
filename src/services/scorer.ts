@@ -13,7 +13,7 @@ export async function scoreResume(resume: ParsedResume, jd: JobDescription): Pro
     const { exactMatchScore, exactMatchReasoning } = calculateExactMatch(resume.skills, jd.required_skills);
     const { achievementScore, achievementReasoning } = calculateAchievementScore(resume.experiences);
     const { ownershipScore, ownershipReasoning } = calculateOwnershipScore(resume.experiences);
-    const { similarityScore, similarityReasoning } = await calculateSimilarityScore(resume, jd);
+    const { similarityScore, similarityReasoning, executiveSummary } = await calculateSimilarityScore(resume, jd);
 
     // Aggregate scores evenly
     const overallScore = (exactMatchScore + achievementScore + ownershipScore + similarityScore) / 4;
@@ -36,7 +36,7 @@ export async function scoreResume(resume: ParsedResume, jd: JobDescription): Pro
             similarity: similarityReasoning,
             achievement: achievementReasoning,
             ownership: ownershipReasoning,
-            overall: `Candidate scored ${Math.round(overallScore)}/100, placing them in ${tier}.`
+            overall: executiveSummary
         }
     };
 }
@@ -73,9 +73,8 @@ async function calculateSimilarityScore(resume: ParsedResume, jd: JobDescription
     Candidate Experience: 
     ${resume.experiences.map(e => `${e.role} at ${e.company}: ${e.action_bullets.join(" ")}`).join("\n")}
 
-    Evaluate the semantic overlap between the candidate's profile and the job description.
-    For instance, AWS Kinesis overlap strongly with Kafka requirements.
-    Return a score strictly from 0 to 100, and a 1-sentence explanation.
+    Task 1: Evaluate the semantic overlap between the candidate's profile and the job description. Return a similarity score (0 to 100) and a 1-sentence explanation.
+    Task 2: Write a comprehensive, 3-4 sentence "Executive Summary" evaluating this candidate's overall fit for the role. Sound like an expert AI recruiter analyzing their strengths, weaknesses, and potential.
     `;
 
         const completion = await openai.chat.completions.create({
@@ -86,7 +85,8 @@ async function calculateSimilarityScore(resume: ParsedResume, jd: JobDescription
                 content: `You must return ONLY a JSON object exactly matching this schema:
 {
   "score": number (0 to 100),
-  "explanation": "1-sentence explanation"
+  "explanation": "1-sentence explanation",
+  "executive_summary": "3-4 sentence detailed paragraph evaluating overall fit"
 }`
             }, {
                 role: "user",
@@ -101,13 +101,15 @@ async function calculateSimilarityScore(resume: ParsedResume, jd: JobDescription
 
         return {
             similarityScore: Math.min(Math.max(result.score, 0), 100), // constrain 0-100
-            similarityReasoning: result.explanation
+            similarityReasoning: result.explanation,
+            executiveSummary: result.executive_summary
         };
     } catch (error) {
         console.error("Failed to calculate similarity score via LLM:", error);
         return {
             similarityScore: 0,
-            similarityReasoning: "Error calculating semantic similarity."
+            similarityReasoning: "Error calculating semantic similarity.",
+            executiveSummary: "Due to an internal generation error, an executive summary could not be created."
         };
     }
 }
