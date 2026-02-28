@@ -37,6 +37,7 @@ body {
   z-index: -1;
   animation: float 20s infinite ease-in-out alternate;
 }
+
 .orb-1 {
   width: 400px;
   height: 400px;
@@ -44,6 +45,7 @@ body {
   top: -100px;
   left: -100px;
 }
+
 .orb-2 {
   width: 300px;
   height: 300px;
@@ -52,6 +54,7 @@ body {
   right: -50px;
   animation-delay: -5s;
 }
+
 .orb-3 {
   width: 250px;
   height: 250px;
@@ -63,8 +66,13 @@ body {
 }
 
 @keyframes float {
-  0% { transform: translateY(0px) scale(1); }
-  100% { transform: translateY(50px) scale(1.1); }
+  0% {
+    transform: translateY(0px) scale(1);
+  }
+
+  100% {
+    transform: translateY(50px) scale(1.1);
+  }
 }
 
 .container {
@@ -78,6 +86,7 @@ header {
   text-align: center;
   margin-bottom: 2rem;
 }
+
 header h1 {
   font-size: 2.5rem;
   font-weight: 700;
@@ -86,6 +95,7 @@ header h1 {
   -webkit-text-fill-color: transparent;
   margin-bottom: 0.5rem;
 }
+
 header p {
   color: var(--text-muted);
   font-size: 1.1rem;
@@ -111,6 +121,7 @@ header p {
 .input-group {
   margin-bottom: 1.5rem;
 }
+
 .input-group label {
   display: block;
   margin-bottom: 0.5rem;
@@ -118,19 +129,26 @@ header p {
   font-weight: 600;
   color: #cbd5e1;
 }
-textarea {
+
+textarea,
+.custom-input {
   width: 100%;
-  height: 180px;
+  padding: 1rem;
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
-  padding: 1rem;
   color: var(--text-main);
   font-size: 0.95rem;
   resize: vertical;
   transition: border-color 0.3s ease;
 }
-textarea:focus {
+
+textarea {
+  height: 180px;
+}
+
+textarea:focus,
+.custom-input:focus {
   outline: none;
   border-color: var(--primary);
 }
@@ -151,6 +169,7 @@ button {
   align-items: center;
   gap: 10px;
 }
+
 button:hover {
   background: var(--primary-hover);
   transform: translateY(-2px);
@@ -161,16 +180,20 @@ button:hover {
 .spinner {
   width: 20px;
   height: 20px;
-  border: 3px solid rgba(255,255,255,0.3);
+  border: 3px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   border-top-color: #fff;
   animation: spin 1s ease-in-out infinite;
 }
+
 .disable-view {
   display: none;
 }
+
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Results Dashboard */
@@ -180,14 +203,16 @@ button:hover {
   align-items: center;
   margin-bottom: 1.5rem;
 }
+
 .back-btn {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   width: auto;
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
 }
+
 .back-btn:hover {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .tier-badge {
@@ -198,9 +223,24 @@ button:hover {
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
 }
-.tier-a { background: rgba(16, 185, 129, 0.2); color: var(--tier-a); border: 1px solid var(--tier-a); }
-.tier-b { background: rgba(245, 158, 11, 0.2); color: var(--tier-b); border: 1px solid var(--tier-b); }
-.tier-c { background: rgba(239, 68, 68, 0.2); color: var(--tier-c); border: 1px solid var(--tier-c); }
+
+.tier-a {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--tier-a);
+  border: 1px solid var(--tier-a);
+}
+
+.tier-b {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--tier-b);
+  border: 1px solid var(--tier-b);
+}
+
+.tier-c {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--tier-c);
+  border: 1px solid var(--tier-c);
+}
 
 .candidate-name {
   font-size: 1.8rem;
@@ -214,13 +254,15 @@ button:hover {
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
+
 .score-card {
   background: rgba(15, 23, 42, 0.4);
   padding: 1.5rem;
   border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   text-align: center;
 }
+
 .score-card h4 {
   color: var(--text-muted);
   font-size: 0.9rem;
@@ -228,11 +270,13 @@ button:hover {
   letter-spacing: 1px;
   margin-bottom: 1rem;
 }
+
 .score-circle {
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
 }
+
 .reason {
   font-size: 0.85rem;
   color: #cbd5e1;
@@ -245,10 +289,12 @@ button:hover {
   padding: 1.5rem;
   border-radius: 16px;
 }
+
 .overall-summary h3 {
   margin-bottom: 0.5rem;
   color: #a5b4fc;
 }
+
 .overall-summary p {
   line-height: 1.6;
 }
