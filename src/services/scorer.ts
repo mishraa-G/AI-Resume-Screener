@@ -1,5 +1,8 @@
 import OpenAI from 'openai';
 import { ParsedResume, JobDescription, ScoreReport } from '../models';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const openai = new OpenAI({
     apiKey: process.env.GROQ_API_KEY,
