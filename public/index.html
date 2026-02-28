@@ -28,10 +28,22 @@
         <h2>Submit Candidate Data</h2>
         <form id="eval-form">
           <div class="input-group">
-            <label for="jd-text">Job Description (JSON / Text)</label>
-            <textarea id="jd-text"
-              placeholder='{"title": "Software Engineer", "required_skills": ["Node.js", "TypeScript"]}'
-              required></textarea>
+            <label for="jd-title">Job Title</label>
+            <input type="text" id="jd-title" class="custom-input" placeholder='e.g. Senior Software Engineer'
+              required />
+          </div>
+          <div class="input-group">
+            <label for="jd-exp">Experience Level</label>
+            <input type="text" id="jd-exp" class="custom-input" placeholder='e.g. Mid-Level, Senior, 3+ Years'
+              required />
+          </div>
+          <div class="input-group">
+            <label for="jd-req-skills">Required Skills (Comma separated)</label>
+            <textarea id="jd-req-skills" placeholder='e.g. Node.js, TypeScript, PostgreSQL' required></textarea>
+          </div>
+          <div class="input-group">
+            <label for="jd-pref-skills">Preferred Skills (Comma separated, Optional)</label>
+            <textarea id="jd-pref-skills" placeholder='e.g. Docker, AWS, GraphQL'></textarea>
           </div>
           <div class="input-group">
             <label for="resume-text">Resume (PDF Upload or Paste Text)</label>

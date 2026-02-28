@@ -28,16 +28,22 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const jdVal = document.getElementById('jd-text').value;
+        const jdValTitle = document.getElementById('jd-title').value;
+        const jdValExp = document.getElementById('jd-exp').value;
+        const jdValReq = document.getElementById('jd-req-skills').value;
+        const jdValPref = document.getElementById('jd-pref-skills').value;
+
         const resumeVal = document.getElementById('resume-text').value;
 
-        let jdJson;
-        try {
-            jdJson = JSON.parse(jdVal);
-        } catch (err) {
-            alert("Job Description must be valid JSON right now based on our domain model.");
-            return;
-        }
+        // Transform comma separated strings into arrays for the backend Zod validation
+        const splitAndTrim = (str) => str ? str.split(',').map(s => s.trim()).filter(s => s.length > 0) : [];
+
+        let jdJson = {
+            title: jdValTitle,
+            experience_level: jdValExp,
+            required_skills: splitAndTrim(jdValReq),
+            preferred_skills: splitAndTrim(jdValPref)
+        };
 
         // UI Loading State
         btnText.textContent = "Processing details with Groq...";
