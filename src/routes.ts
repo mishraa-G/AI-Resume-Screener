@@ -10,29 +10,25 @@ const router = Router();
 
 router.post('/evaluate', upload.single('resume_file'), async (req: Request, res: Response) => {
     try {
-        const { resume_text, job_description } = req.body;
-
-        let finalResumeText = resume_text;
-
-        // If a file was uploaded, parse the PDF instead
+        const { job_description } = req.body;
         const uploadedFile = (req as any).file;
-        if (uploadedFile) {
-            if (uploadedFile.mimetype !== 'application/pdf') {
-                return res.status(400).json({ error: "Uploaded file must be a PDF." });
-            }
-            try {
-                const pdfData = await pdfParse(uploadedFile.buffer);
-                finalResumeText = pdfData.text;
-            } catch (e: any) {
-                require('fs').writeFileSync('pdf_error.log', e.stack || String(e));
-                console.error("PDF Parsing exception raised:", e);
-                return res.status(400).json({ error: "Failed to parse the uploaded PDF file." });
-            }
+
+        if (!uploadedFile) {
+            return res.status(400).json({ error: "Missing candidate resume. Please upload a PDF file." });
         }
 
-        // 1. Validate Input
-        if (!finalResumeText || typeof finalResumeText !== 'string' || finalResumeText.trim() === '') {
-            return res.status(400).json({ error: "Missing or invalid resume text. Please provide 'resume_text' or upload a 'resume_file'." });
+        if (uploadedFile.mimetype !== 'application/pdf') {
+            return res.status(400).json({ error: "Uploaded file must be a PDF." });
+        }
+
+        let finalResumeText = "";
+        try {
+            const pdfData = await pdfParse(uploadedFile.buffer);
+            finalResumeText = pdfData.text;
+        } catch (e: any) {
+            require('fs').writeFileSync('pdf_error.log', e.stack || String(e));
+            console.error("PDF Parsing exception raised:", e);
+            return res.status(400).json({ error: "Failed to extract text from the uploaded PDF file." });
         }
 
         if (!job_description) {

@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const jdValReq = document.getElementById('jd-req-skills').value;
         const jdValPref = document.getElementById('jd-pref-skills').value;
 
-        const resumeVal = document.getElementById('resume-text').value;
+
 
         // Transform comma separated strings into arrays for the backend Zod validation
         const splitAndTrim = (str) => str ? str.split(',').map(s => s.trim()).filter(s => s.length > 0) : [];
@@ -55,11 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('job_description', JSON.stringify(jdJson));
 
             const fileInput = document.getElementById('resume-file');
-            if (fileInput.files.length > 0) {
-                formData.append('resume_file', fileInput.files[0]);
-            } else {
-                formData.append('resume_text', resumeVal);
+            if (fileInput.files.length === 0) {
+                throw new Error("Please upload a PDF resume.");
             }
+            formData.append('resume_file', fileInput.files[0]);
 
             const response = await fetch('/api/evaluate', {
                 method: 'POST',
