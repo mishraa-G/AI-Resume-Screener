@@ -1,0 +1,14 @@
+John Doe
+Software Engineer
+
+Skills: Node.js, TypeScript, AWS Kinesis, Postgres, Docker
+
+Experience:
+TechCorp - Backend Engineer
+- Led the migration of monolith to microservices using Node.js and TypeScript.
+- Architected a real-time data pipeline with AWS Kinesis processing 10k events/sec.
+- Assisted in managing PostgreSQL databases.
+
+WebSolutions - Junior Developer
+- Participated in building the company's internal dashboard in React.
+- Built REST APIs for user authentication using Express.

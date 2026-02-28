@@ -1,0 +1,6 @@
+{
+  "title": "Backend Software Engineer",
+  "required_skills": ["Node.js", "TypeScript", "Kafka", "PostgreSQL"],
+  "preferred_skills": ["AWS", "Docker", "Kubernetes"],
+  "experience_level": "Mid-Level"
+}
