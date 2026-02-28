@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Resume Interview Assistant</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <div class="container">
+    
+    <header>
+      <h1>AI Resume Screener</h1>
+      <p>Precision extraction & cognitive scoring powered by Groq.</p>
+    </header>
+
+    <main>
+      <div class="glass-panel form-panel" id="input-section">
+        <h2>Submit Candidate Data</h2>
+        <form id="eval-form">
+          <div class="input-group">
+            <label for="jd-text">Job Description (JSON / Text)</label>
+            <textarea id="jd-text" placeholder='{"title": "Software Engineer", "required_skills": ["Node.js", "TypeScript"]}' required></textarea>
+          </div>
+          <div class="input-group">
+            <label for="resume-text">Resume Text</label>
+            <textarea id="resume-text" placeholder="Paste the raw candidate resume text here..." required></textarea>
+          </div>
+          
+          <button type="submit" id="submit-btn">
+            <span class="btn-text">Evaluate Candidate</span>
+            <div class="spinner disable-view" id="loading-spinner"></div>
+          </button>
+        </form>
+      </div>
+
+      <!-- Results Dashboard (Hidden Initially) -->
+      <div class="glass-panel results-panel hidden" id="results-section">
+        <div class="results-header">
+          <h2>Candidate Evaluation</h2>
+          <button class="back-btn" id="back-btn">← New Eval</button>
+        </div>
+        
+        <div class="tier-badge" id="tier-badge">Tier A</div>
+        <p class="candidate-name" id="candidate-name">Jane Doe</p>
+
+        <div class="scores-grid">
+          <div class="score-card">
+            <h4>Exact Match</h4>
+            <div class="score-circle" id="score-exact">85%</div>
+            <p class="reason" id="reason-exact">Matched 4 of 5 skills</p>
+          </div>
+          <div class="score-card">
+            <h4>Similarity</h4>
+            <div class="score-circle" id="score-sim">90%</div>
+            <p class="reason" id="reason-sim">Strong semantic overlap</p>
+          </div>
+          <div class="score-card">
+            <h4>Achievement</h4>
+            <div class="score-circle" id="score-achieve">70%</div>
+            <p class="reason" id="reason-achieve">3 metrics found</p>
+          </div>
+          <div class="score-card">
+            <h4>Ownership</h4>
+            <div class="score-circle" id="score-own">95%</div>
+            <p class="reason" id="reason-own">High leadership traits</p>
+          </div>
+        </div>
+
+        <div class="overall-summary">
+          <h3>Overall Summary</h3>
+          <p id="reason-overall">Candidate is highly recommended for progression.</p>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

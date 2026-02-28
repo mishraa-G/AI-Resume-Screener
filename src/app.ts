@@ -7,6 +7,9 @@ dotenv.config();
 const app = express();
 app.use(express.json()); // parse JSON bodies
 
+// Serve frontend static files
+app.use(express.static('public'));
+
 // Register routes
 app.use('/api', router);
 
