@@ -1,7 +1,10 @@
 import OpenAI from 'openai';
 import { ParsedResumeSchema, ParsedResume } from '../models';
 
-const openai = new OpenAI();
+const openai = new OpenAI({
+    apiKey: process.env.GROQ_API_KEY,
+    baseURL: "https://api.groq.com/openai/v1"
+});
 
 export async function extractResume(resumeText: string): Promise<ParsedResume> {
     if (!resumeText || resumeText.trim() === '') {
@@ -10,7 +13,7 @@ export async function extractResume(resumeText: string): Promise<ParsedResume> {
 
     try {
         const completion = await openai.beta.chat.completions.parse({
-            model: "gpt-4o-2024-08-06",
+            model: "llama-3.3-70b-versatile",
             messages: [
                 {
                     role: "system",

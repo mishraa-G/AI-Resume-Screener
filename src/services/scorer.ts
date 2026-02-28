@@ -1,7 +1,10 @@
 import OpenAI from 'openai';
 import { ParsedResume, JobDescription, ScoreReport } from '../models';
 
-const openai = new OpenAI();
+const openai = new OpenAI({
+    apiKey: process.env.GROQ_API_KEY,
+    baseURL: "https://api.groq.com/openai/v1"
+});
 
 export async function scoreResume(resume: ParsedResume, jd: JobDescription): Promise<ScoreReport> {
     const { exactMatchScore, exactMatchReasoning } = calculateExactMatch(resume.skills, jd.required_skills);
@@ -73,7 +76,7 @@ async function calculateSimilarityScore(resume: ParsedResume, jd: JobDescription
     `;
 
         const completion = await openai.beta.chat.completions.parse({
-            model: "gpt-4o-2024-08-06",
+            model: "llama-3.3-70b-versatile",
             messages: [{ role: "user", content: prompt }],
             response_format: {
                 type: "json_schema",
