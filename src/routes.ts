@@ -22,7 +22,7 @@ router.post('/evaluate', async (req: Request, res: Response) => {
         if (!jdValidation.success) {
             return res.status(400).json({
                 error: "Invalid 'job_description' format.",
-                details: jdValidation.error.errors
+                details: (jdValidation as any).error.errors
             });
         }
         const jd = jdValidation.data;

@@ -75,7 +75,7 @@ async function calculateSimilarityScore(resume: ParsedResume, jd: JobDescription
     Return a score strictly from 0 to 100, and a 1-sentence explanation.
     `;
 
-        const completion = await openai.beta.chat.completions.parse({
+        const completion = await openai.chat.completions.create({
             model: "llama-3.3-70b-versatile",
             messages: [{ role: "user", content: prompt }],
             response_format: {
@@ -93,11 +93,13 @@ async function calculateSimilarityScore(resume: ParsedResume, jd: JobDescription
                     },
                     strict: true
                 }
-            }
+            } as any
         });
 
-        const result = completion.choices[0]?.message?.parsed;
-        if (!result) throw new Error("No parsed data returned");
+        if (!completion.choices[0]?.message?.content) {
+            throw new Error("No text data returned");
+        }
+        const result = JSON.parse(completion.choices[0].message.content);
 
         return {
             similarityScore: Math.min(Math.max(result.score, 0), 100), // constrain 0-100

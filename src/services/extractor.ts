@@ -12,7 +12,7 @@ export async function extractResume(resumeText: string): Promise<ParsedResume> {
     }
 
     try {
-        const completion = await openai.beta.chat.completions.parse({
+        const completion = await openai.chat.completions.create({
             model: "llama-3.3-70b-versatile",
             messages: [
                 {
@@ -52,14 +52,14 @@ export async function extractResume(resumeText: string): Promise<ParsedResume> {
                     },
                     strict: true
                 }
-            }
+            } as any
         });
 
-        const parsedData = completion.choices[0]?.message?.parsed;
-
-        if (!parsedData) {
+        if (!completion.choices[0]?.message?.content) {
             throw new Error("Failed to extract data: OpenAI returned an empty or invalid response.");
         }
+
+        const parsedData = JSON.parse(completion.choices[0].message.content);
 
         // Double-check validation against Zod schema just to be extremely safe, 
         // even though OpenAI Structured Outputs guarantees the structure.
