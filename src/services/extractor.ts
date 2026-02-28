@@ -17,45 +17,28 @@ export async function extractResume(resumeText: string): Promise<ParsedResume> {
     try {
         const completion = await openai.chat.completions.create({
             model: "llama-3.3-70b-versatile",
+            response_format: { type: "json_object" },
             messages: [
                 {
                     role: "system",
-                    content: "You are an expert HR assistant. Your job is to extract candidate information from the provided resume text and strictly format it according to the requested JSON schema. Be precise and extract exactly what is stated in the resume."
+                    content: `You are an expert HR assistant. Your job is to extract candidate information from the provided resume text and strictly format it as JSON. You must return ONLY a JSON object that satisfies this schema:
+{
+  "candidate_name": string,
+  "skills": string[],
+  "experiences": [
+    {
+      "role": string,
+      "company": string,
+      "action_bullets": string[]
+    }
+  ]
+}`
                 },
                 {
                     role: "user",
                     content: `Extract the following resume text:\n\n${resumeText}`
                 }
-            ],
-            response_format: {
-                type: "json_schema",
-                json_schema: {
-                    name: "parsed_resume",
-                    schema: {
-                        type: "object",
-                        properties: {
-                            candidate_name: { type: "string" },
-                            skills: { type: "array", items: { type: "string" } },
-                            experiences: {
-                                type: "array",
-                                items: {
-                                    type: "object",
-                                    properties: {
-                                        role: { type: "string" },
-                                        company: { type: "string" },
-                                        action_bullets: { type: "array", items: { type: "string" } }
-                                    },
-                                    required: ["role", "company", "action_bullets"],
-                                    additionalProperties: false
-                                }
-                            }
-                        },
-                        required: ["candidate_name", "skills", "experiences"],
-                        additionalProperties: false
-                    },
-                    strict: true
-                }
-            } as any
+            ]
         });
 
         if (!completion.choices[0]?.message?.content) {

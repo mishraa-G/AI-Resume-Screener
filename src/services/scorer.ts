@@ -80,23 +80,18 @@ async function calculateSimilarityScore(resume: ParsedResume, jd: JobDescription
 
         const completion = await openai.chat.completions.create({
             model: "llama-3.3-70b-versatile",
-            messages: [{ role: "user", content: prompt }],
-            response_format: {
-                type: "json_schema",
-                json_schema: {
-                    name: "similarity_evaluation",
-                    schema: {
-                        type: "object",
-                        properties: {
-                            score: { type: "number", description: "Score from 0 to 100" },
-                            explanation: { type: "string", description: "1-sentence explanation" }
-                        },
-                        required: ["score", "explanation"],
-                        additionalProperties: false
-                    },
-                    strict: true
-                }
-            } as any
+            response_format: { type: "json_object" },
+            messages: [{
+                role: "system",
+                content: `You must return ONLY a JSON object exactly matching this schema:
+{
+  "score": number (0 to 100),
+  "explanation": "1-sentence explanation"
+}`
+            }, {
+                role: "user",
+                content: prompt
+            }]
         });
 
         if (!completion.choices[0]?.message?.content) {

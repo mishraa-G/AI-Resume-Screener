@@ -3,7 +3,7 @@ import { JobDescriptionSchema } from './models';
 import { extractResume } from './services/extractor';
 import { scoreResume } from './services/scorer';
 import multer from 'multer';
-import pdfParse = require('pdf-parse');
+const pdfParse = require('pdf-parse');
 
 const upload = multer();
 const router = Router();
@@ -21,10 +21,11 @@ router.post('/evaluate', upload.single('resume_file'), async (req: Request, res:
                 return res.status(400).json({ error: "Uploaded file must be a PDF." });
             }
             try {
-                const pdfParser: any = pdfParse;
-                const pdfData = await pdfParser(uploadedFile.buffer);
+                const pdfData = await pdfParse(uploadedFile.buffer);
                 finalResumeText = pdfData.text;
-            } catch (e) {
+            } catch (e: any) {
+                require('fs').writeFileSync('pdf_error.log', e.stack || String(e));
+                console.error("PDF Parsing exception raised:", e);
                 return res.status(400).json({ error: "Failed to parse the uploaded PDF file." });
             }
         }
@@ -38,8 +39,18 @@ router.post('/evaluate', upload.single('resume_file'), async (req: Request, res:
             return res.status(400).json({ error: "Missing 'job_description' in request body." });
         }
 
-        const jdValidation = JobDescriptionSchema.safeParse(job_description);
+        let parsedJd;
+        try {
+            parsedJd = typeof job_description === 'string' ? JSON.parse(job_description) : job_description;
+            console.log("Parsed JD object:", parsedJd);
+        } catch (e) {
+            console.error("JSON parse failed for string:", job_description);
+            return res.status(400).json({ error: "job_description must be a valid JSON string." });
+        }
+
+        const jdValidation = JobDescriptionSchema.safeParse(parsedJd);
         if (!jdValidation.success) {
+            console.error("Zod Validation Error:", (jdValidation as any).error.errors);
             return res.status(400).json({
                 error: "Invalid 'job_description' format.",
                 details: (jdValidation as any).error.errors
