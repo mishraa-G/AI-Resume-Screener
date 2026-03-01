@@ -73,3 +73,7 @@ The application will start the Express Backend and concurrently serve the Fronte
 - **Groq API (Llama 3.3 70b)**: Lightning-fast reasoning models via standard OpenAI SDK format.
 - **Multer / pdf-parse**: In-memory Multipart File Handling & Data Extraction
 - **Vanilla CSS/JS**: Premium Frontend without heavy bundle builds
+
+## Demo Video
+
+https://drive.google.com/file/d/1amNOviNI4PU1X2ykRdPtUzA7qnmW4vPR/view?usp=drivesdk
